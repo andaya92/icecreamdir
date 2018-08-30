@@ -11,16 +11,15 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-
+import Environment
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
-
+env = Environment.load_obj("icecream_env")
+print(env)
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'su+07467s9=)b@%ucmu^=!e*#_1-enzpm92$oj+bi6pd@v7x+e'
+SECRET_KEY = env['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -35,12 +34,9 @@ LOGIN_URL = 'directory:login'
 
 INSTALLED_APPS = [
     'rest_framework',
-    'rest_framework.authtoken',
-    'appsettings.apps.AppsettingsConfig',
     'directory.apps.DirectoryConfig',
     'myfriends.apps.MyfriendsConfig',
     'myprofile.apps.MyprofileConfig',
-    'users.apps.UsersConfig',
     'icecreamshop.apps.IcecreamshopConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -85,14 +81,7 @@ WSGI_APPLICATION = 'icecreamshop.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'icecreamshop',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-        'USER': 'root',
-        'PASSWORD': 'mostdope'
-    }
+    'default': env['DATABASE']
 }
 
 

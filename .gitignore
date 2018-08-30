@@ -2,4 +2,5 @@
 migrations
 static
 media
-
+env_settings.py
+icecream_env.pkl
