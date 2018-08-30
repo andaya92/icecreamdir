@@ -1,0 +1,85 @@
+{% extends 'icecreamshop/base.html' %}
+
+{% block title %} My Profile {% endblock title %}
+{% block body %}
+	<style type="text/css">
+		ul{
+		    list-style: none;
+		    display: -webkit-inline-box;
+		    padding: 0;
+		}
+		input{
+		    text-align: center;
+		}
+
+		img{
+			width:50%;
+			height:50%;
+		}
+		.Favorited{
+			background-color: #18491f;
+		}
+		.Hated{
+			background-color: #a63200;
+			color:#f6ec00;
+		}
+		.Not_Saved{
+			background-color: grey;
+		}
+
+		.inlineDisplay{
+			display: inline-flex;
+		}
+
+
+		p{
+			margin: 0;
+		    text-align: -webkit-center;
+		    font-size:  2.0em;
+		    background-color: transparent;
+		}
+
+	</style>
+	<h1>{{user.username|title}}'s Profile</h1>
+	<button id="showfavs" class="" name="showlist" value="fav">Favorites</button>
+	<button id ="showdislikes" class=""name="showlist" value="dislike">Dislikes</button>
+	<br/><br/>
+	<div id="icecreamlist"></div>
+
+	<script src="/static/js/functions.js"></script>
+	<script>
+		let list = document.getElementById('icecreamlist');
+		let favsbtn = document.getElementById('showfavs');
+		let dislikesbtn = document.getElementById('showdislikes');
+
+
+		function getList(btn){
+			let userid = {% if user %}{{user.id}}{% else %}"1"{% endif %}; 
+			let field = (btn.target.value == "dislike")?"dislikes":"favorites";
+			let listdiv = document.getElementById('icecreamlist');
+			let url = "/directory/query/user/triedicecream/"+userid+"/"+field;
+
+			fetch(url,{
+				headers: {
+		            "Content-Type": "application/json; charset=utf-8",
+		            // "Content-Type": "application/x-www-form-urlencoded",
+	            	"Authorization" : "Token {{user.token_user_auth}}",
+	            	"WWW-Authenticate" : "Token",
+		        }
+			})
+			.then((resp)=>resp.json())
+			.then(function(data){
+				console.log(data);
+				if(typeof(data) == typeof("")){
+					listdiv.innerHTML = "<h1 class='nodata'>No results</h1>";
+				}else{
+					listdiv.innerHTML = buildListItem(data, "profile", {{user.id}});
+				}
+			});
+		} 
+
+		favsbtn.onclick = getList;
+		dislikesbtn.onclick = getList;
+	</script>
+
+{% endblock body %}	

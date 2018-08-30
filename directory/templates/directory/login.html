@@ -1,0 +1,36 @@
+{% extends 'icecreamshop/base.html' %}
+
+{% block title %} Log in {% endblock title %}
+{% block body %}
+	{% if user.is_superuser %}
+		<p>Hello superuser!</p>
+	{% endif %}
+	
+	{% if user.is_authenticated %}
+		<div class="btn"> You are logged in</div><br><br>
+		<a href="/directory/logout" class="btn btn-danger">logout here</a>
+	{% else %}
+		<h1>Log In</h1>
+		<form action="{% url 'directory:login' %}" method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			{% include 'directory/form_template.html' %}
+			<input type="submit" value="LOGIN" class="btn btn-success"/>
+		</form>
+
+		<h2> Or Create an Account </h2>
+		<a href="/directory/createAccount/" class="btn btn-info">Create Account</a>
+	{% endif %}
+{% endblock body %}
+
+{% block script %}
+	<script type="text/javascript">
+		$(function(){
+			var f1 = document.getElementById('id_username');
+			var f2 = document.getElementById('id_password');
+			if(f1){
+				f1.placeholder = 'Username';
+				f2.placeholder = 'Password';
+			}
+		});
+	</script>
+{% endblock script %}

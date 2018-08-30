@@ -1,0 +1,24 @@
+ <style type="text/css">
+    ul{
+            list-style: none;
+        display: -webkit-inline-box;
+        padding: 0;
+    }
+    input{
+        text-align: center;
+    }
+ </style>
+
+ <ul>
+    {% for error in form.non_field_errors %}
+        <li> <span class="">{{error}}</span></li>
+    {% endfor %}
+</ul>
+
+{% for field in form %}
+        <span class="field_errors"> {{field.errors}} </span>
+        <div class="col" >
+        	<span class="field_input form-control">{{ field }} </span>
+        </div>
+{% endfor %}
+<br/>

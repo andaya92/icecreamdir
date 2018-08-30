@@ -1,0 +1,146 @@
+{% extends 'icecreamshop/base.html' %}
+
+{% block title %} {{icecream.name}} {% endblock title %}
+{% block body %}
+<style>
+	.commenttext{
+		color: white;
+		font-style: bold italic;
+	}
+	.usernamecomment{
+		color: grey;
+	}
+	.commentRow{
+		background-color: #1c1e21;
+		margin-bottom: 5px;
+	}
+	.commentArea{
+		background-color: #222326f7;
+		max-height: 375px;
+		overflow-y: scroll;
+	}
+	.addCommentDiv{
+		background-color: green;
+	}
+	.addCommentDivInit{
+		line-height: 2;
+    	font-size: 4em;
+    	display: inline-grid;
+	}
+	.commentsHeader{
+		color: white;
+		line-height: 2em;
+    	font-size: 4em;
+	}
+	.itemKin{
+		font-style: italic;
+	}
+	.itemStyle{
+		font-style: bold;
+	}
+	.itemName{
+		line-height: 2em;
+    	font-size: 3em;
+	}
+	.favOrHateHeader{
+		color:white;
+		
+		margin: 0 auto;
+	}
+	.addCommentBtn{
+		font-size: 0.75em; 
+		margin: 0 auto;
+	}
+	.noParlors{
+		color: grey;
+		font-size: 2.0em;
+	}
+	.inputBorder{
+		border: 1px grey solid;
+		font-size: 0.75em;
+	}
+	.favBackground{
+		background: #222326f7;
+	}
+	.usernamecomment{
+		font-size: 2em;
+    	line-height: 2em;
+	}
+</style>
+
+<div class="row">
+	<div class="col-12">
+		<span class="itemName">{{icecream.name}}</span>
+		<div id="saveitem" class="row favBackground"></div>
+	</div>
+	<div class="col-12">
+		<img src="{{icecream.image}}"/>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-6">
+		<h5>{{icecream.kin}}</h5>
+		<h5>{{icecream.style}}</h5>
+		<h2>${{icecream.price}}</h2>
+	</div>
+
+	<div class="col-6">
+		{% if icecream.parlors|length > 0 %}
+			<span class="itemParlors">{{icecream.parlors}}</span>
+		{% else %}
+				<span class="noParlors">No parlors.</span>
+		{% endif %}
+	</div>
+</div>
+
+<div id="addcommentdiv" class="addCommentDivInit"></div>
+
+{% if comments %}
+	<div id="commentbuttons" class='commentArea brad'>
+		<h3 class="commentsHeader">Comments</h3>
+	{% for c in comments %}
+		<div id="commentRow{{c.id}}" class="commentRow">
+			<span class='usernamecomment'>{{c.user.username|title}} -- </span><span class="commenttext">&nbsp;{{c.comment}}</span>
+			{% if c.user == request.user %}
+				<button id="rmcmt{{c.id}}" class="btn btn-sm btn-danger">delete</button><br/>
+			{% endif %}
+		</div>
+	{% endfor %}
+	<div style="height: 32px;"></div>
+	</div>
+{% endif %}
+
+<br/>
+
+<a href="/{{frompg}}" class="btn btn-secondary" role="button">BACK</a>
+{% endblock body%}
+
+{% block script %}
+	<script type="text/javascript" src="/static/js/functions.js"></script>
+	<script >
+		// Add to favorites or dislikes
+		let addcmttdiv = document.getElementById('addcommentdiv');
+		let savediv = document.getElementById('saveitem');
+		
+		const userToken = "{{user.token_user_auth}}";
+		const userId = "{{user.id}}";
+		const csrfToken = "{{csrf_token}}";
+		const faved = "{{faved}}";
+		const hated = "{{hated}}";
+		const icecreamId = "{{icecream.id}}";
+
+		function enterCommentForm(event){
+			console.log(event);
+			if(event.key=="Enter"){
+				addcommentbtn.click();					
+			}
+		}	
+
+		showAddComments();
+		addcommentbtn.onclick = addComment;
+		document.getElementById("comment_text").onkeypress = enterCommentForm;
+		showSaveOption(faved, hated);
+		setRMCommentBtn();	
+	</script>
+{% endblock script %}
